@@ -1,10 +1,10 @@
-name: "Deploy Infra (Traefik)"
+name: "Deploy Infra (Portainer)"
 on:
   push:
     branches:
       - main
     paths:
-      - 'Infrastruture/traefik/**'
+      - 'Infrastruture/portainer/**'
 
 jobs:
   build_deploy:
@@ -19,8 +19,8 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "Infrastruture/traefik/**"
-          target: "/root/infra/traefik"
+          source: "Infrastruture/portainer/**"
+          target: "/root/infra/portainer"
           strip_components: 2
           rm: true
           debug: true
