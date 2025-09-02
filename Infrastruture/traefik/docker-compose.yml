@@ -1,0 +1,87 @@
+secrets:
+  cloudflare-token:
+    file: "secrets/cloudflare-token.secret"
+  cloudflare-email:
+    file: "secrets/cloudflare-email.secret"
+
+
+networks:
+  production:
+    external: true
+    name: production
+  monitoring:
+    external: true
+    name: monitoring
+
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    restart: unless-stopped
+    command:
+      # Ativar providers e painel
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--api.dashboard=true"
+      - "--api.insecure=false"
+   
+      # Configurar Let's Encrypt via DNS-01 Cloudflare
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.resolvers=1.1.1.1:53,1.0.0.1:53"
+      - "--certificatesResolvers.letsencrypt.acme.dnschallenge.delayBeforeCheck=20"
+      - "--certificatesresolvers.letsencrypt.acme.email=lucas.luizacar22@gmail.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+
+      # Redirecionamento de HTTP para HTTPS
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      
+
+      # Configurar TLS para o domínio e wildcard
+      - "--entrypoints.websecure.http.tls=true"
+      - "--entrypoints.websecure.http.tls.certResolver=letsencrypt"
+      - "--entrypoints.websecure.http.tls.domains[0].main=riders.lat"
+      - "--entrypoints.websecure.http.tls.domains[0].sans=*.riders.lat"
+
+      # Habilitar logs detalhados
+      - "--log.level=DEBUG"
+
+      # Habilitar Metricas Prometheus
+      - "--metrics.prometheus=true"
+      - "--metrics.prometheus.entryPoint=traefik"
+      - "--metrics.prometheus.addEntryPointsLabels=true"
+      - "--metrics.prometheus.addRoutersLabels=true"
+      - "--metrics.prometheus.addServicesLabels=true"
+      - "--entrypoints.traefik.address=:8080"   
+
+    labels:
+      # Acesso ao painel do Traefik
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.yourdomain.com.br`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$2y$$05$$EZKLCs8Ezr8rjsCpkcncRuJLVTDM2qEZrNyXJ0Z4OWNR3o.hqofyK" #Lcs6598@@!!
+      - "traefik.http.routers.traefik.middlewares=traefik-auth"
+      
+    secrets:
+      - cloudflare-token
+      - cloudflare-email
+    environment:
+      - CF_DNS_API_TOKEN_FILE=/run/secrets/cloudflare-token
+      - CF_API_EMAIL_FILE=/run/secrets/cloudflare-email
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/letsencrypt
+    networks:
+      - production
+      - monitoring
+
+      
+
