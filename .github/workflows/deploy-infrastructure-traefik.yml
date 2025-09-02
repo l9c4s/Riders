@@ -19,6 +19,6 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "Infrastruture/traefik/"
+          source: "Infrastruture/traefik/*"
           target: "/root/infra/traefik"
           debug: true
