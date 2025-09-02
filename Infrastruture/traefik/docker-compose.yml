@@ -82,6 +82,3 @@ services:
     networks:
       - production
       - monitoring
-
-      
-
