@@ -60,7 +60,7 @@ services:
     labels:
       # Acesso ao painel do Traefik
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.yourdomain.com.br`)"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.riders.lat`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$2y$$05$$EZKLCs8Ezr8rjsCpkcncRuJLVTDM2qEZrNyXJ0Z4OWNR3o.hqofyK" #Lcs6598@@!!
