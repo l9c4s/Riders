@@ -1,4 +1,4 @@
-name: "Deploy Infra (Traefik)"
+name: "Deploy DATABASE (Redis)"
 on:
   push:
     branches:
