@@ -1,0 +1,41 @@
+services:
+  riders:
+    build:
+      context: ./Backand
+      dockerfile: Dockerfile
+    image: riders_image
+    container_name: riders_API
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: "http://+:8080"
+      ConnectionStrings__DefaultConnection: "Host=riders_postgres;Port=5432;Database=RidersBase;Username=Riders;Password=123456789"
+      ConnectionStrings__RedisConnection: "riders_redis:6379"
+      RabbitMQ__HostName: riders_rabbitmq
+      RabbitMQ__UserName: riders_user
+      RabbitMQ__Password: riders_pass
+    # ports:
+    #   - "5000:8080" # opcional para debug local; remova em produção
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.riders.rule=Host(`api.riders.lat`)"
+      - "traefik.http.routers.riders.entrypoints=websecure"
+      - "traefik.http.routers.riders.tls.certresolver=letsencrypt"
+      - "traefik.http.services.riders.loadbalancer.server.port=8080"
+      - "traefik.docker.network=production"  
+    networks:
+      - production
+      - monitoring
+      - databases
+    restart: unless-stopped
+
+
+networks:
+  production:
+    external: true
+    name: production
+  monitoring:
+    external: true
+    name: monitoring
+  databases:
+    external: true
+    name: databases
