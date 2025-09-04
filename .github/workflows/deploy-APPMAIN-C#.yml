@@ -6,6 +6,8 @@ on:
     paths:
       - 'aplications/NET' 
       - 'aplications/NET/**'
+      - '.github/workflows/deploy-APPMAIN-C#.yml'
+  workflow_dispatch:
 
 jobs:
   build_deploy:
