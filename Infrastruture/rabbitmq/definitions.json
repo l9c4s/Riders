@@ -1,0 +1,18 @@
+{
+  "users": [
+    {
+      "name": "Lucasriders",
+      "password_hash": "txDY9er0OtTk6lljoUm4CCkZ13mXTkpiRavLVdzsixZUYRXO",
+      "tags": "administrator"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "kalo",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ]
+}
