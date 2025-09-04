@@ -1,0 +1,51 @@
+networks:
+  databases:
+    external: true
+    name: databases
+  monitoring:
+    external: true
+    name: monitoring
+
+volumes:
+  postgres_data:
+    driver: local
+    name: postgres_data
+
+services:
+  postgres:
+    image:  postgres:17
+    container_name: postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./conf/postgresql.conf:/etc/postgresql/postgresql.conf
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U administrator"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - databases
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter
+    container_name: postgres-exporter
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "9187:9187"
+    environment:
+      - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      
+    networks:
+      - databases
+      - monitoring
