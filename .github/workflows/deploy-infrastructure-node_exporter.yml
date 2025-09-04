@@ -1,4 +1,4 @@
-name: "Deploy Infra (Traefik)"
+name: "Deploy Infra (node_exporter)"
 on:
   push:
     branches:
