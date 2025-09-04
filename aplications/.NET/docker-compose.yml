@@ -15,6 +15,7 @@ services:
       RabbitMQ__Password: riders_pass
     # ports:
     #   - "5000:8080" # opcional para debug local; remova em produção
+    
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.riders.rule=Host(`api.riders.lat`)"
