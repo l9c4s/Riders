@@ -24,3 +24,13 @@ jobs:
           strip_components: 2
           rm: true
           debug: true
+
+      - name: "Rebuild docker image"
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /root/infra/prometheus
+            docker compose -f /root/infra/prometheus/docker-compose.yml up -d --build
