@@ -14,7 +14,13 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v4
 
-        
+      - name: "Debug workspace paths"
+        run: |
+          pwd
+          ls -la
+          ls -la aplications || true
+          ls -la aplications/NET || true
+          
       - name: "Copy Files"
         uses: appleboy/scp-action@v0.1.7
         with:
