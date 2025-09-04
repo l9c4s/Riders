@@ -29,7 +29,6 @@ services:
       - databases
     restart: unless-stopped
 
-
 networks:
   production:
     external: true
