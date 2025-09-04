@@ -1,0 +1,26 @@
+name: "Deploy APLICATION (NET)"
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'aplications/NET/**'
+
+jobs:
+  build_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Copy Files"
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "aplications/NET/**"
+          target: "/root/aplications/NET/"
+          strip_components: 2
+          rm: true
+          debug: true
