@@ -1,4 +1,7 @@
 {
+  "vhosts": [
+    { "name": "/" }
+  ],
   "users": [
     {
       "name": "Lucasriders",
