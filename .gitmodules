@@ -1,0 +1,4 @@
+[submodule "aplications/NET"]
+	path = aplications/NET
+	url = https://github.com/l9c4s/Riders_v1
+	branch = main
