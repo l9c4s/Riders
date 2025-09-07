@@ -66,4 +66,5 @@ networks:
     external: true
     name: databases
 
-    
+volumes:
+  testresults:
