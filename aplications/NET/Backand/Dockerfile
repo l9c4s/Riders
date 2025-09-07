@@ -15,7 +15,7 @@ COPY ["Riders/Riders.csproj", "Riders/"]
 COPY ["Aplication/Aplication.csproj", "Aplication/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
 COPY ["Infraestructure/Infraestructure.csproj", "Infraestructure/"]
-
+COPY ["Test_Riders/Test_Riders.csproj", "Test_Riders/"]
 
 
 # Restaure as depend�ncias
@@ -37,3 +37,11 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Riders.dll"]
+
+
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS test-runner
+WORKDIR /src
+COPY . .
+RUN dotnet restore "Test_Riders/Test_Riders.csproj"
+RUN dotnet build "Test_Riders/Test_Riders.csproj" -c Release --no-restore
+ENTRYPOINT ["dotnet", "test", "Test_Riders/Test_Riders.csproj", "-c", "Release", "--no-build", "--logger:trx;LogFileName=test_results.trx", "--results-directory", "/testresults"]

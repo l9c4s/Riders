@@ -1,4 +1,27 @@
 services:
+  tests:
+    build:
+      context: ./Backand
+      dockerfile: Dockerfile
+      target: test-runner
+    image: riders_tests
+    container_name: riders_tests
+    environment:
+      ASPNETCORE_ENVIRONMENT: Testing
+      # Ajuste os hosts para os serviços reais nas suas stacks externas:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=RidersBase;Username=Riders;Password=123456789"
+      ConnectionStrings__RedisConnection: "redis:6379"
+      RabbitMQ__HostName: rabbitmq
+      RabbitMQ__UserName: riders_user
+      RabbitMQ__Password: riders_pass
+    volumes:
+      - testresults:/testresults
+    networks:
+      - production
+      - monitoring
+      - databases
+    restart: "no"
+
   riders:
     build:
       context: ./Backand
@@ -27,6 +50,9 @@ services:
       - production
       - monitoring
       - databases
+    depends_on:
+      tests:
+        condition: service_completed_successfully
     restart: unless-stopped
 
 networks:
