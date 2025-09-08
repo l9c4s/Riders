@@ -39,9 +39,6 @@ services:
       RabbitMQ__HostName: rabbitmq
       RabbitMQ__UserName: Lucasriders
       RabbitMQ__Password: Lcs6598@@clear
-    # ports:
-    #   - "5000:8080" # opcional para debug local; remova em produção
-    
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.riders.rule=Host(`api.riders.lat`)"
