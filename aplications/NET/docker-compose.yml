@@ -12,8 +12,8 @@ services:
       - ../../databases/redis/.env
     environment:
       ASPNETCORE_ENVIRONMENT: Testing
-      ConnectionStrings__DefaultConnection: "Host=riders_postgres;Port=5432;Database=RidersBase;Username=Riders;Password=123456789"
-      ConnectionStrings__RedisConnection: "riders_redis:6379"
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=riderscash;Username=AdBr312;Password=Lcs6598@@clear"
+      ConnectionStrings__RedisConnection: "redis:6379"
       RabbitMQ__HostName: rabbitmq
       RabbitMQ__UserName: Lucasriders
       RabbitMQ__Password: Lcs6598@@clear
