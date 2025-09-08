@@ -35,7 +35,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: "http://+:8080"
       ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=riderscash;Username=AdBr312;Password=Lcs6598@@clear"
-      ConnectionStrings__RedisConnection: "redis:6379"
+      ConnectionStrings__RedisConnection: "redis:6379,password=${REDIS_PASSWORD}"
       RabbitMQ__HostName: rabbitmq
       RabbitMQ__UserName: Lucasriders
       RabbitMQ__Password: Lcs6598@@clear
