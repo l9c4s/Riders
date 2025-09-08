@@ -6,9 +6,6 @@ services:
       target: test-runner
     image: riders_tests
     container_name: riders_tests
-    env_file:
-      - ../../databases/postgresql/.env
-      - ../../databases/redis/.env
     environment:
       ASPNETCORE_ENVIRONMENT: Testing
       # Use variáveis de ambiente em vez de hardcode
