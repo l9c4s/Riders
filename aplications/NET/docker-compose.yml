@@ -12,14 +12,10 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Testing
       # Use variáveis de ambiente em vez de hardcode
-      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
-      ConnectionStrings__RedisConnection: "redis:6379,password=${REDIS_PASSWORD}"
-      RabbitMQ__HostName: rabbitmq
-      RabbitMQ__UserName: ${RABBITMQ_USER}
-      RabbitMQ__Password: ${RABBITMQ_PASSWORD}
     volumes:
       - testresults:/testresults
     networks:
+      - application  
       - production
       - monitoring
       - databases
@@ -34,12 +30,6 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: "http://+:8080"
-      # Melhor usar variáveis de ambiente
-      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
-      ConnectionStrings__RedisConnection: "redis:6379,password=${REDIS_PASSWORD}"
-      RabbitMQ__HostName: rabbitmq
-      RabbitMQ__UserName: ${RABBITMQ_USER}
-      RabbitMQ__Password: ${RABBITMQ_PASSWORD}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.riders.rule=Host(`api.riders.lat`)"
@@ -48,6 +38,7 @@ services:
       - "traefik.http.services.riders.loadbalancer.server.port=8080"
       - "traefik.docker.network=production"
     networks:
+      - application  
       - production
       - monitoring
       - databases
@@ -64,6 +55,9 @@ services:
       start_period: 40s
 
 networks:
+  application:
+    external: true
+    name: application
   production:
     external: true
     name: production
