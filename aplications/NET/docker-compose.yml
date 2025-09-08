@@ -58,7 +58,7 @@ networks:
   production:
     external: true
     name: production
-  monitoring:
+  monitoring: 
     external: true
     name: monitoring
   databases:
