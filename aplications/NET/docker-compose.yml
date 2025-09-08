@@ -6,17 +6,17 @@ services:
       target: test-runner
     image: riders_tests
     container_name: riders_tests
-    # Reusa as mesmas variáveis dos stacks externos
     env_file:
       - ../../databases/postgresql/.env
       - ../../databases/redis/.env
     environment:
       ASPNETCORE_ENVIRONMENT: Testing
-      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=riderscash;Username=AdBr312;Password=Lcs6598@@clear"
-      ConnectionStrings__RedisConnection: "redis:6379"
+      # Use variáveis de ambiente em vez de hardcode
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+      ConnectionStrings__RedisConnection: "redis:6379,password=${REDIS_PASSWORD}"
       RabbitMQ__HostName: rabbitmq
-      RabbitMQ__UserName: Lucasriders
-      RabbitMQ__Password: Lcs6598@@clear
+      RabbitMQ__UserName: ${RABBITMQ_USER}
+      RabbitMQ__Password: ${RABBITMQ_PASSWORD}
     volumes:
       - testresults:/testresults
     networks:
@@ -34,18 +34,19 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: "http://+:8080"
-      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=riderscash;Username=AdBr312;Password=Lcs6598@@clear"
+      # Melhor usar variáveis de ambiente
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
       ConnectionStrings__RedisConnection: "redis:6379,password=${REDIS_PASSWORD}"
       RabbitMQ__HostName: rabbitmq
-      RabbitMQ__UserName: Lucasriders
-      RabbitMQ__Password: Lcs6598@@clear
+      RabbitMQ__UserName: ${RABBITMQ_USER}
+      RabbitMQ__Password: ${RABBITMQ_PASSWORD}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.riders.rule=Host(`api.riders.lat`)"
       - "traefik.http.routers.riders.entrypoints=websecure"
       - "traefik.http.routers.riders.tls.certresolver=letsencrypt"
       - "traefik.http.services.riders.loadbalancer.server.port=8080"
-      - "traefik.docker.network=production"  
+      - "traefik.docker.network=production"
     networks:
       - production
       - monitoring
@@ -54,6 +55,13 @@ services:
       tests:
         condition: service_completed_successfully
     restart: unless-stopped
+    # Adicionar health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 networks:
   production:
