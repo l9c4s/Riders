@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Exceptions;
-using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
 using Xunit;
 
@@ -25,7 +24,7 @@ public class ExternalServicesFixture : IAsyncLifetime
             .AddEnvironmentVariables()
             .Build();
 
-        PostgresConnectionString = Configuration.GetConnectionString("Postgres");
+        PostgresConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
         // Conexão RabbitMQ (opcional, se configurado)
         var host = Configuration["RabbitMQ:HostName"];
