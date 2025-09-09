@@ -10,7 +10,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Testing
       # Use variáveis de ambiente em vez de hardcode
     volumes:
-      - testresults:/testresults
+      - ./testresults:/testresults
     networks:
       - application  
       - production
