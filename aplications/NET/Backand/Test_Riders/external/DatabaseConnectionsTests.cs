@@ -43,6 +43,8 @@ public class DatabaseConnectionTests
         // Arrange
         var connectionString = _configuration.GetConnectionString("RedisConnection");
 
+        Assert.NotEmpty(connectionString);
+
         // Act & Assert
         using var redis = ConnectionMultiplexer.Connect(connectionString);
         var database = redis.GetDatabase();
