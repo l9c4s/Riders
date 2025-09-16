@@ -12,7 +12,7 @@ services:
     volumes:
       - ./testresults:/testresults
     networks:
-      - application  
+      - applications  
       - production
       - monitoring
       - databases
@@ -35,7 +35,7 @@ services:
       - "traefik.http.services.riders.loadbalancer.server.port=8080"
       - "traefik.docker.network=production"
     networks:
-      - application  
+      - applications  
       - production
       - monitoring
       - databases
@@ -52,9 +52,9 @@ services:
       start_period: 40s
 
 networks:
-  application:
+  applications:
     external: true
-    name: application
+    name: applications
   production:
     external: true
     name: production
