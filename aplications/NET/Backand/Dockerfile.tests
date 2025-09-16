@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS tests
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS tests-runner
 WORKDIR /src
 
 COPY ["Riders/Riders.csproj", "Riders/"]
