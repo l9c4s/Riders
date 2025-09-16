@@ -14,7 +14,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    var conn = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseNpgsql(conn, npgsql =>
+    {
+        // retry para caso o DB ainda esteja subindo
+        npgsql.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(10), errorCodesToAdd: null);
+    });
+});
 
 builder.Services.AddHealthChecks();
 builder.Services.AddSignalR();
@@ -42,6 +49,23 @@ builder.Services.AddTokenService(builder.Configuration);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        var db = services.GetRequiredService<AppDbContext>();
+        db.Database.Migrate();
+        logger.LogInformation("Migrations aplicadas com sucesso.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Falha ao aplicar migrations.");
+        throw; // falha o container para reiniciar e tentar novamente
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
