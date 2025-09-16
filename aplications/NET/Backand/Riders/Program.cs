@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
+builder.Services.AddHealthChecks();
 builder.Services.AddSignalR();
 builder.Services.AddRepositoryesInjections();
 builder.Services.AddServicesInjections();
@@ -59,10 +59,11 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 
 app.UseCors("CorsPolicy");
 
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 HubsRegistration.MapAllHubs(app);
-
+app.MapHealthChecks("/health"); // Endpoint de health check
 app.Run();

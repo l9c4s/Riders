@@ -3,7 +3,6 @@ services:
     build:
       context: ./Backand
       dockerfile: Dockerfile
-      target: test-runner
     image: riders_tests
     container_name: riders_tests
     environment:

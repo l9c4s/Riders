@@ -1,5 +1,8 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+
+USER root
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 USER app
 WORKDIR /app
 EXPOSE 8080
@@ -39,9 +42,3 @@ COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Riders.dll"]
 
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS test-runner
-WORKDIR /src
-COPY . .
-RUN dotnet restore "Test_Riders/Test_Riders.csproj"
-RUN dotnet build "Test_Riders/Test_Riders.csproj" -c Release --no-restore
-ENTRYPOINT ["dotnet", "test", "Test_Riders/Test_Riders.csproj", "-c", "Release", "--no-build", "--logger:trx;LogFileName=test_results.trx", "--results-directory", "/testresults"]
