@@ -31,7 +31,6 @@ services:
       - "traefik.http.routers.riders.rule=Host(`api.riders.lat`)"
       - "traefik.http.routers.riders.entrypoints=websecure"
       - "traefik.http.routers.riders.tls=true"
-      - "traefik.http.routers.riders.middlewares=cors-public@file"
       - "traefik.http.routers.riders.tls.certresolver=letsencrypt"
       - traefik.http.services.riders.loadbalancer.server.port=8080
       - "traefik.docker.network=production"
