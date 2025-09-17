@@ -2,7 +2,7 @@ services:
   tests:
     build:
       context: ./Backand
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.tests
     image: riders_tests
     container_name: riders_tests
     environment:
@@ -30,8 +30,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.riders.rule=Host(`api.riders.lat`)"
       - "traefik.http.routers.riders.entrypoints=websecure"
+      - "traefik.http.routers.riders.tls=true"
+      - "traefik.http.routers.riders.middlewares=cors-public@file"
       - "traefik.http.routers.riders.tls.certresolver=letsencrypt"
-      - "traefik.http.services.riders.loadbalancer.server.port=8080"
+      - traefik.http.services.riders.loadbalancer.server.port=8080
       - "traefik.docker.network=production"
     networks:
       - applications  
