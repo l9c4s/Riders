@@ -45,6 +45,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("PublicForHub", policyBuilder =>
     {
         policyBuilder
+            .SetIsOriginAllowed(_ => true) // permitir qualquer origem
             .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
