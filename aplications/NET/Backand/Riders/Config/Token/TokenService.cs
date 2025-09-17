@@ -40,10 +40,11 @@ public static class TokenService
                 OnMessageReceived = context =>
                 {
                     var accessToken = context.Request.Query["access_token"];
-
-                    // Se a requisição for para o nosso hub, leia o token da query string
                     var path = context.HttpContext.Request.Path;
-                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/locationhub"))
+
+
+                    if (!string.IsNullOrEmpty(accessToken) &&
+                    path.StartsWithSegments("/locationhub", StringComparison.OrdinalIgnoreCase))
                     {
                         context.Token = accessToken;
                     }

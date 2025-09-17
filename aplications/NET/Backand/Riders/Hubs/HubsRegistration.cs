@@ -7,7 +7,7 @@ public static class HubsRegistration
 {
     public static void MapAllHubs(WebApplication app)
     {
-        app.MapHub<LocationHub>("/locationhub");
+        app.MapHub<LocationHub>("/locationhub").RequireCors("PublicForHub");
         // Adicione outros Hubs aqui se necessário
     }
 }
