@@ -30,5 +30,29 @@ jobs:
           source: "aplications/NET/**"
           target: "/root/aplications/NET/"
           strip_components: 2
-          rm: true
+          rm: truec
           debug: true
+
+      - name: "Restart Docker Compose services"
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -euo pipefail
+            cd /root/aplications/NET
+            echo "[INFO] Directory contents:"
+            ls -la
+
+            echo "[INFO] Parando serviços (se existirem)..."
+            docker compose stop || true
+
+            echo "[INFO] Subindo novamente com build..."
+            docker compose up -d --build
+
+            echo "[INFO] Status final:"
+            docker compose ps
+
+            echo "[INFO] Limpando imagens órfãs..."
+            docker image prune -f || true
