@@ -162,9 +162,8 @@ namespace Aplication.UseCases.User
                 throw new ArgumentException("User with this email or username already exists");
             }
             return false;
-
         }
-        
+
         public async Task<bool> ResetPassword(UpdatePasswordDto resetPasswordDto)
         {
             var user = await _userRepository.GetByUserNameAndEmailAsync(resetPasswordDto.Name, resetPasswordDto.Email) ?? throw new ArgumentException("User or Email is wrong !!");
