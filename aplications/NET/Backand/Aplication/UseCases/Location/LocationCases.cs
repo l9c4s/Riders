@@ -97,13 +97,12 @@ public class LocationCases : ILocationsUseCases
     {
         var message = JsonSerializer.Serialize(payload);
 
-
         var publishTasks = userIds.Select(userId =>
             _rabbitMqService.PublishToUserQueue(userId, message)
         );
 
-
         Task.WhenAll(publishTasks);
+
         return Task.CompletedTask;
     }
 
