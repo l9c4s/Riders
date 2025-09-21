@@ -162,6 +162,7 @@ namespace Aplication.UseCases.User
                 throw new ArgumentException("User with this email or username already exists");
             }
             return false;
+            
         }
 
         public async Task<bool> ResetPassword(UpdatePasswordDto resetPasswordDto)
