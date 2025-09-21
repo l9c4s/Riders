@@ -30,7 +30,7 @@ jobs:
           source: "aplications/NET/**"
           target: "/root/aplications/NET/"
           strip_components: 2
-          rm: truec
+          rm: true
           debug: true
 
       - name: "Restart Docker Compose services"
