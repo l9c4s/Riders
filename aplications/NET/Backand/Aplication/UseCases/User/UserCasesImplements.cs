@@ -165,12 +165,13 @@ namespace Aplication.UseCases.User
 
         }
 
+
         public async Task<bool> ResetPassword(UpdatePasswordDto resetPasswordDto)
         {
             var user = await _userRepository.GetByUserNameAndEmailAsync(resetPasswordDto.Name, resetPasswordDto.Email) ?? throw new ArgumentException("User or Email is wrong !!");
 
             user.PasswordHash = Utils.GenerateHash(resetPasswordDto.NewPassword);
-            
+
             await _userRepository.ResetPasswordAsync(user.Id, user.PasswordHash);
             return true;
         }
