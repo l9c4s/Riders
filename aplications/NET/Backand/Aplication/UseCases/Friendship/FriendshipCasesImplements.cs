@@ -12,10 +12,13 @@ namespace Aplication.UseCases.Friendship
         private readonly IFriendshipRepository _friendshipRepository;
         private readonly IUserRepository _userRepository;
 
-        public FriendshipCasesImplements(IFriendshipRepository friendshipRepository, IUserRepository userRepository)
+        private readonly ILocationShareRepository _locationShareRepository;
+
+        public FriendshipCasesImplements(IFriendshipRepository friendshipRepository, IUserRepository userRepository, ILocationShareRepository locationShareRepository)
         {
             _friendshipRepository = friendshipRepository;
             _userRepository = userRepository;
+            _locationShareRepository = locationShareRepository;
         }
 
         public async Task<RequestFriendshipDto> RequestFriendship(RequestFriendshipDto request)
@@ -67,11 +70,31 @@ namespace Aplication.UseCases.Friendship
         public async Task<IEnumerable<ListFriendsDto>> GetFriendships(Guid userId)
         {
             IEnumerable<Domain.Entities.Friendship> friendships = await _friendshipRepository.FindAsync(f => (f.RequesterId == userId || f.AddresseeId == userId) && (f.Status == FriendshipStatus.Accepted || f.Status == FriendshipStatus.Pending));
+
             if (friendships == null || !friendships.Any())
                 throw new KeyNotFoundException("No friendships found for the user");
 
-            // Map the friendships to DTOs
-            IEnumerable<ListFriendsDto> ListFriendsDtos = FriendshipMapper.ToDto(friendships);
+
+
+            List<ListFriendsDto> ListFriendsDtos = new List<ListFriendsDto>();
+            foreach (var friendship in friendships)
+            {
+                ListFriendsDto friendDto = new ();
+                var locationShares = await _locationShareRepository.FindShareAsync(friendship.RequesterId, friendship.AddresseeId);
+                if (locationShares != null)
+                {
+                    friendDto = FriendshipMapper.ToDto(friendship);
+                    friendDto.StatusLocationShare = locationShares.IsActive ? "Ativo" : "Inativo";
+                    friendDto.IDLocationShare = locationShares.Id.ToString();
+                    ListFriendsDtos.Add(friendDto);
+                    continue;
+                }
+                friendDto = FriendshipMapper.ToDto(friendship);
+                friendDto.StatusLocationShare = "Inativo";
+                friendDto.IDLocationShare = null;
+                ListFriendsDtos.Add(friendDto);
+            }
+
             return ListFriendsDtos;
         }
 

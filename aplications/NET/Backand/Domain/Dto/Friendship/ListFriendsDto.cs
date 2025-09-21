@@ -10,5 +10,11 @@ public class ListFriendsDto
         public string? FriendName { get; set; }
         public string Status { get; set; }
         public DateTime RequestedAt { get; set; }
+
+        public string StatusLocationShare { get; set; }
+
+        public string IDLocationShare { get; set; }
+
+
 }
    
