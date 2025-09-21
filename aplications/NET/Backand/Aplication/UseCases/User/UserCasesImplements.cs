@@ -164,8 +164,7 @@ namespace Aplication.UseCases.User
             return false;
 
         }
-
-
+        
         public async Task<bool> ResetPassword(UpdatePasswordDto resetPasswordDto)
         {
             var user = await _userRepository.GetByUserNameAndEmailAsync(resetPasswordDto.Name, resetPasswordDto.Email) ?? throw new ArgumentException("User or Email is wrong !!");
