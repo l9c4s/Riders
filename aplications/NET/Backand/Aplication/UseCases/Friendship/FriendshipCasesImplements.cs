@@ -23,14 +23,14 @@ namespace Aplication.UseCases.Friendship
             var addressee = await _userRepository.GetByIdAsync(request.AddresseeId);
 
             if (addressee == null)
-                throw new Exception("User not found");
+                throw new ArgumentException("User not found");
 
             var existingFriendship = await _friendshipRepository.FirstOrDefaultAsync(f =>
                 (f.RequesterId == request.RequesterId && f.AddresseeId == request.AddresseeId) ||
                 (f.RequesterId == request.AddresseeId && f.AddresseeId == request.RequesterId));
 
             if (existingFriendship != null)
-                throw new Exception("Friendship request already exists");
+                throw new ArgumentException("Friendship request already exists");
 
             var friendship = new Domain.Entities.Friendship
             {

@@ -27,16 +27,7 @@ namespace Riders.Controllers
             return Ok(new { message = "Location updated successfully." });
         }
 
-        [HttpPost("GrantShare")]
-        public async Task<IActionResult> GrantShare(GetByIdGenerics observerId)
-        {
-            var sharerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(sharerId)) return Unauthorized();
-
-            await _locationUseCases.GrantLocationShareAsync(sharerId, observerId.Id);
-            return Ok(new { message = "Location sharing granted." });
-        }
-
+      
         [HttpPost("RevokeShare")]
         public async Task<IActionResult> RevokeShare(GetByIdGenerics observerId)
         {
