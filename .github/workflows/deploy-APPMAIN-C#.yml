@@ -46,7 +46,7 @@ jobs:
             ls -la
 
             echo "[INFO] Parando serviços (se existirem)..."
-            docker compose stop || true
+            docker compose stop 
 
             echo "[INFO] Subindo novamente com build..."
             docker compose up -d --build
