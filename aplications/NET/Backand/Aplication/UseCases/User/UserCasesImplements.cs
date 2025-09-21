@@ -1,4 +1,5 @@
-﻿using Aplication.Contracts;
+﻿using System.Runtime.Intrinsics.Arm;
+using Aplication.Contracts;
 using Domain.Contracts;
 using Domain.Dto.RequestResultsDto;
 using Domain.Dto.Token;
@@ -96,6 +97,7 @@ namespace Aplication.UseCases.User
                 throw new ArgumentException("User not found");
             }
 
+            
             return new CreateAnyLevelUser
             {
                 UserName = user.UserName,
@@ -161,6 +163,16 @@ namespace Aplication.UseCases.User
             }
             return false;
 
+        }
+
+        public async Task<bool> ResetPassword(UpdatePasswordDto resetPasswordDto)
+        {
+            var user = await _userRepository.GetByUserNameAndEmailAsync(resetPasswordDto.Name, resetPasswordDto.Email) ?? throw new ArgumentException("User or Email is wrong !!");
+
+            user.PasswordHash = Utils.GenerateHash(resetPasswordDto.NewPassword);
+            
+            await _userRepository.ResetPasswordAsync(user.Id, user.PasswordHash);
+            return true;
         }
     }
 }

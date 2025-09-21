@@ -9,5 +9,6 @@ namespace Domain.Contracts
 
         Task<User?> GetByUserNameAndEmailAsync(string userName, string email);
 
+        Task<bool> ResetPasswordAsync(Guid id, string newPasswordHash);
     }
 }

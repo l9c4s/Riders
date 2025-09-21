@@ -1,6 +1,7 @@
-﻿using Domain.Dto.RequestResultsDto;
+﻿using Domain.Dto.User;
+using Domain.Dto.RequestResultsDto;
 using Domain.Dto.Token;
-using Domain.Dto.User;
+
 
 namespace Aplication.Contracts
 {
@@ -17,6 +18,7 @@ namespace Aplication.Contracts
 
         Task<RequestResultsDto> UpdateUser(UpdateUserDto createUserDto);
 
+        Task<bool> ResetPassword(UpdatePasswordDto resetPasswordDto);
         Task<CreateAnyLevelUser> GetUserById(string id);
 
         Task<IEnumerable<ListUsersDto>> GetAllUsers();

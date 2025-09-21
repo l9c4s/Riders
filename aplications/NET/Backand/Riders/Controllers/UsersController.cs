@@ -33,6 +33,17 @@ namespace Riders.Controllers
             );
         }
 
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(UpdatePasswordDto resetPasswordDto)
+        {
+            var result = await _usersUseCases.ResetPassword(resetPasswordDto);
+            return Ok(new RequestResultsDto
+            {
+                Message = "Password reset successfully.",
+                Success = result,
+                Data = result
+            });
+        }
 
         [HttpPost("addUser")]
         public async Task<IActionResult> AddUser(CreateUserDto createUser)
@@ -82,6 +93,10 @@ namespace Riders.Controllers
             return Ok(result);
         }
 
+
+
+
+       
 
         [Authorize(Policy = nameof(AccessLevel.CommonUser))]
         [HttpPost("GetUserById")]
