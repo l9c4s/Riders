@@ -23,6 +23,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     });
 });
 
+
+
 builder.Services.AddHealthChecks();
 builder.Services.AddSignalR();
 builder.Services.AddRepositoryesInjections();
