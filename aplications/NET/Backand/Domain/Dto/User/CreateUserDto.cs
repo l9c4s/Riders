@@ -4,6 +4,10 @@ namespace Domain.Dto.User
 {
     public class CreateUserDto
     {
+        [Required(ErrorMessage = "O apelido é obrigatório.")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "O apelido deve ter entre 3 e 50 caracteres.")]
+        public string NickName { get; set; } = string.Empty;
+
         [Required(ErrorMessage = "O nome de usuário é obrigatório.")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "O nome de usuário deve ter entre 3 e 50 caracteres.")]
         public string UserName { get; set; } = string.Empty;
