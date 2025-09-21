@@ -22,14 +22,16 @@ namespace Aplication.UseCases.User
 
         public async Task<CreateUserDto> CreateUser(CreateUserDto createUserDto)
         {
-            await IsValidEmailAndUser(createUserDto.Email, createUserDto.UserName);
+            await IsValidEmailAndUser(createUserDto.Email, createUserDto.UserName, createUserDto.NickName);
+
             var user = new Domain.Entities.User
             {
                 Id = Guid.NewGuid(),
                 UserName = createUserDto.UserName,
                 Email = createUserDto.Email,
                 PasswordHash = Utils.GenerateHash(createUserDto.Password),
-                AccessLevel = Domain.Enum.AccessLevel.CommonUser
+                AccessLevel = Domain.Enum.AccessLevel.CommonUser,
+                NickName = createUserDto.NickName
             };
 
             await _userRepository.AddAsync(user);
@@ -139,27 +141,28 @@ namespace Aplication.UseCases.User
 
         public async Task<CreateAnyLevelUser> CreateAnyLevelUser(CreateAnyLevelUser createUserDto)
         {
-            await IsValidEmailAndUser(createUserDto.Email, createUserDto.UserName);
+            await IsValidEmailAndUser(createUserDto.Email, createUserDto.UserName, createUserDto.NickName);
             var user = new Domain.Entities.User
             {
                 Id = Guid.NewGuid(),
                 UserName = createUserDto.UserName,
                 Email = createUserDto.Email,
                 PasswordHash = Utils.GenerateHash(createUserDto.Password),
-                AccessLevel = createUserDto.AccessLevel
+                AccessLevel = createUserDto.AccessLevel,
+                NickName = createUserDto.NickName
             };
 
             await _userRepository.AddAsync(user);
             return createUserDto;
         }
 
-        private async Task<bool> IsValidEmailAndUser(string email, string UserName)
+        private async Task<bool> IsValidEmailAndUser(string email, string UserName, string NickName)
         {
             // Check if the user exists
-            var user = await _userRepository.GetByUserNameAndEmailAsync(UserName, email);
+            var user = await _userRepository.GetByUserNameAndEmailandNickNameAsync(UserName, email, NickName);
             if (user != null)
             {
-                throw new ArgumentException("User with this email or username already exists");
+                throw new ArgumentException("User with this email or username or nickname already exists");
             }
             return false;
             
@@ -167,7 +170,7 @@ namespace Aplication.UseCases.User
 
         public async Task<bool> ResetPassword(UpdatePasswordDto resetPasswordDto)
         {
-            var user = await _userRepository.GetByUserNameAndEmailAsync(resetPasswordDto.Name, resetPasswordDto.Email) ?? throw new ArgumentException("User or Email is wrong !!");
+            var user = await _userRepository.GetByUserNameAndEmail(resetPasswordDto.Name, resetPasswordDto.Email) ?? throw new ArgumentException("User or Email is wrong !!");
 
             user.PasswordHash = Utils.GenerateHash(resetPasswordDto.NewPassword);
 

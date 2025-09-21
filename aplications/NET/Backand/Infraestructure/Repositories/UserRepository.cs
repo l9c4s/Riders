@@ -18,9 +18,14 @@ namespace Infraestructure.Repositories
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public Task<User?> GetByUserNameAndEmailAsync(string userName, string email)
+        public Task<User?> GetByUserNameAndEmail(string userName, string email)
         {
             return _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.UserName == userName);
+        }
+
+        public Task<User?> GetByUserNameAndEmailandNickNameAsync(string userName, string email ,string nickName)
+        {
+            return _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.UserName == userName && u.NickName == nickName);
         }
 
         public async Task<bool> ResetPasswordAsync(Guid id, string newPasswordHash)
