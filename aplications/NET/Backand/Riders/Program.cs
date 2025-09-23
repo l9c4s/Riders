@@ -18,7 +18,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     var conn = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseNpgsql(conn, npgsql =>
     {
-        // retry para caso o DB ainda esteja subindo
         npgsql.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(10), errorCodesToAdd: null);
     });
 });
@@ -32,6 +31,14 @@ builder.Services.AddServicesInjections();
 builder.Services.AddManageHubInjetions();
 builder.Services.AddExternalServices(builder.Configuration);
 builder.Services.AddControllers();
+
+builder.Services.Configure<ForwardedHeadersOptions>(o =>
+{
+    o.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    // Limpa para aceitar cabeçalhos de qualquer proxy (ou adicione IP do host se quiser restringir)
+    o.KnownNetworks.Clear();
+    o.KnownProxies.Clear();
+});
 
 builder.Services.AddCors(options =>
 {
@@ -48,7 +55,6 @@ builder.Services.AddCors(options =>
     {
         policyBuilder
             .SetIsOriginAllowed(_ => true) // permitir qualquer origem
-            .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -84,14 +90,13 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+
 app.UseErrorHandling();
 
 app.UseHttpsRedirection();
 
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-});
+app.UseForwardedHeaders();
 
 app.UseCors("CorsPolicy");
 
