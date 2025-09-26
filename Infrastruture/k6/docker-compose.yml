@@ -1,0 +1,15 @@
+networks:
+  applications:
+    external: true
+    name: applications
+
+services:
+  k6:
+    image: grafana/k6:latest
+    container_name: k6_load_tester
+    working_dir: /app
+    command: ["run", "tests/setup_users.js"]
+    volumes:
+      - .:/app
+    networks:
+      - applications
