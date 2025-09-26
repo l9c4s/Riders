@@ -14,6 +14,8 @@ services:
     command: redis-server /usr/local/etc/redis/redis.conf
     ports:
       - "6379:6379"
+    mem_limit: 2g
+    cpus: '1.0'
     volumes:
       - redis_data:/data
       - ./conf/redis.conf:/usr/local/etc/redis/redis.conf

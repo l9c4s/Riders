@@ -20,6 +20,8 @@ services:
       - .env
     ports:
       - "5432:5432"
+    mem_limit: 2g
+    cpus: '1.0'
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./conf/postgresql.conf:/etc/postgresql/postgresql.conf

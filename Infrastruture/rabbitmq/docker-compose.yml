@@ -20,6 +20,8 @@ services:
       - "5672:5672" #porta de comunicação
       - "15672:15672" #porta de gerenciamento
       - "15692:15692" #porta de monitoramento
+    mem_limit: 8g
+    cpus: '1.0'
     environment:
       RABBITMQ_LOAD_DEFINITIONS: /etc/rabbitmq/definitions.json
     volumes:
